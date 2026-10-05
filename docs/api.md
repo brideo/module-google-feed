@@ -1,5 +1,10 @@
 # REST API for the reporting system
 
+Feeds, mapping, discovery, previews, generation and settings are managed through
+the [AI connector tools](mcp-tools.md), not through REST or GraphQL. This page
+covers the REST routes that remain: Google attribute values, click-attributed
+orders, and the headless cart click.
+
 This is the contract between the module and the external system that holds the
 Google Ads connection, the subscription, and the reporting and MCP layer.
 
@@ -9,7 +14,7 @@ Google Ads connection, the subscription, and the reporting and MCP layer.
 |---|---|---|
 | Spend and clicks per product | Google Ads API, `shopping_performance_view` with `segments.product_item_id` | Item ID |
 | Sales, refunds and cost per product | `GET attributed-orders` on this module | SKU |
-| Which store and currency an item ID belongs to | `GET feeds` | Feed |
+| Which store and currency an item ID belongs to | `google_feed_list_feeds` MCP tool | Feed |
 
 The feed's `id` is mapped to the SKU by default, so the Google Ads item ID and
 the order item SKU are the same value. Google lower-cases item IDs in reports,
@@ -48,30 +53,6 @@ All times are UTC.
 
 Base path: `/rest/V1/upturnstudio/google-feed` (prefix the store code, e.g.
 `/rest/default/V1/...`, as with any Magento REST call).
-
-## GET /feeds
-
-Lists every feed.
-
-```json
-[
-  {
-    "feed_id": 1,
-    "name": "Default Store Feed",
-    "store_id": 1,
-    "store_code": "default",
-    "target_country": "US",
-    "currency_code": "USD",
-    "url": "https://example.com/media/upturnstudio/googlefeed/<token>.xml",
-    "is_active": true,
-    "last_status": "success",
-    "last_generated_at": "2026-10-05 20:47:51",
-    "product_count": 2028
-  }
-]
-```
-
-`last_status` is `queued`, `running`, `success` or `error`.
 
 ## PUT /product-attributes
 
@@ -212,6 +193,42 @@ Notes:
 - `landing_url` is the page path without its query string.
 - Click data comes from the shopper's browser. It is validated for shape, but
   a `gclid` is only proven real when Google Ads recognises it.
+
+## POST /guest-carts/:cartId/click and POST /carts/mine/click
+
+For headless storefronts that cannot send Magento the click cookie. Attach the
+click to the shopper's cart; when the cart becomes an order, the click is
+recorded on it exactly as a cookie click would be. Needs no token for a guest
+cart (knowing the masked cart ID is the credential) and a customer token for
+`carts/mine`.
+
+```json
+{
+  "click": {
+    "gclid": "Cj0KCQ...",
+    "landing_sku": "24-MB01",
+    "landing_url": "https://shop.example/bag",
+    "clicked_at": "2026-10-05T20:53:57Z"
+  }
+}
+```
+
+At least one of `gclid`, `gbraid` and `wbraid` is required, and each must look
+like a Google click ID. A second call for the same cart replaces the first. A
+cart that belongs to a customer is only found for that customer. If a cart has
+a click attached, it is used instead of any cookie.
+
+The same thing is available in GraphQL, with the same rules:
+
+```graphql
+mutation {
+  setGoogleAdsClickOnCart(input: {
+    cart_id: "<masked cart id>"
+    gclid: "Cj0KCQ..."
+    landing_sku: "24-MB01"
+  })
+}
+```
 
 ## Subscription validation (to be built)
 

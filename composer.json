@@ -17,6 +17,8 @@
         "magento/module-backend": "*",
         "magento/module-catalog": "*",
         "magento/module-config": "*",
+        "magento/module-graph-ql": "*",
+        "magento/module-webapi": "*",
         "magento/module-configurable-product": "*",
         "magento/module-cron": "*",
         "magento/module-eav": "*",
@@ -25,7 +27,8 @@
         "magento/module-sales": "*",
         "magento/module-store": "*",
         "magento/module-tax": "*",
-        "magento/module-ui": "*"
+        "magento/module-ui": "*",
+        "upturnstudio/module-mcp": "*"
     },
     "autoload": {
         "files": [

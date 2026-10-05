@@ -6,10 +6,12 @@
             <resource id="Magento_Backend::admin">
                 <resource id="UpturnStudio_GoogleFeed::root" title="Google Feeds" translate="title" sortOrder="210">
                     <resource id="UpturnStudio_GoogleFeed::feeds" title="Manage Feeds" translate="title" sortOrder="10"/>
-                    <resource id="UpturnStudio_GoogleFeed::api" title="API" translate="title" sortOrder="20">
-                        <resource id="UpturnStudio_GoogleFeed::api_feeds" title="Read Feed List" translate="title" sortOrder="10"/>
+                    <resource id="UpturnStudio_GoogleFeed::api" title="API and AI Connector" translate="title" sortOrder="20">
+                        <resource id="UpturnStudio_GoogleFeed::api_feeds" title="Read Feeds, Options and Item Previews" translate="title" sortOrder="10"/>
+                        <resource id="UpturnStudio_GoogleFeed::api_feeds_manage" title="Create, Change and Delete Feeds; Run Generation" translate="title" sortOrder="15"/>
                         <resource id="UpturnStudio_GoogleFeed::api_attributes" title="Read and Write Google Attribute Values" translate="title" sortOrder="20"/>
                         <resource id="UpturnStudio_GoogleFeed::api_orders" title="Read Click-Attributed Orders" translate="title" sortOrder="30"/>
+                        <resource id="UpturnStudio_GoogleFeed::api_settings" title="Read and Change Settings" translate="title" sortOrder="40"/>
                     </resource>
                 </resource>
                 <resource id="Magento_Backend::stores">

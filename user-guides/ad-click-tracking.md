@@ -66,6 +66,14 @@ sale of the second, so both views are available in reporting.
   off, or speak to your developer about tying it to your banner.
 - Add the cookie to your cookie policy.
 
+## Headless storefronts
+
+A headless storefront on its own domain cannot send Magento the click cookie.
+It can attach the click to the shopper's cart instead, with one REST call or
+GraphQL mutation, once the cart exists. The click is then recorded on the order
+the cart becomes, and wins over any cookie. The call needs no token for a guest
+cart. See the [REST reference](../docs/api.md#post-guest-cartscartidclick-and-post-cartsmineclick).
+
 ## Theme compatibility
 
 The script has no dependencies, so it works on Luma-based and Hyvä themes, and

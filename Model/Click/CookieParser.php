@@ -35,10 +35,19 @@ class CookieParser
             return null;
         }
         $data = json_decode($raw, true);
-        if (!is_array($data)) {
-            return null;
-        }
 
+        return is_array($data) ? $this->normalize($data, $now) : null;
+    }
+
+    /**
+     * Validate click data with the cookie's keys: gclid, gbraid, wbraid, sku, url and ts (milliseconds).
+     *
+     * @param array $data
+     * @param int|null $now Current Unix time, for tests
+     * @return array|null Click data, or null when it holds no usable click ID
+     */
+    public function normalize(array $data, ?int $now = null): ?array
+    {
         $click = [];
         foreach (self::ID_FIELDS as $field) {
             $value = $data[$field] ?? null;

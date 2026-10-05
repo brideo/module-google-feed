@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="UpturnStudio\GoogleFeed\Api\FeedListInterface"
-                type="UpturnStudio\GoogleFeed\Model\Api\FeedList"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\CartClickInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\CartClick"/>
     <preference for="UpturnStudio\GoogleFeed\Api\ProductAttributeManagementInterface"
                 type="UpturnStudio\GoogleFeed\Model\Api\ProductAttributeManagement"/>
     <preference for="UpturnStudio\GoogleFeed\Api\AttributedOrderListInterface"
                 type="UpturnStudio\GoogleFeed\Model\Api\AttributedOrderList"/>
     <preference for="UpturnStudio\GoogleFeed\Api\LicenceValidatorInterface"
                 type="UpturnStudio\GoogleFeed\Model\Licence\HttpValidator"/>
-    <preference for="UpturnStudio\GoogleFeed\Api\Data\FeedInfoInterface"
-                type="UpturnStudio\GoogleFeed\Model\Api\Data\FeedInfo"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\ClickInputInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\ClickInput"/>
     <preference for="UpturnStudio\GoogleFeed\Api\Data\ProductAttributeValueInterface"
                 type="UpturnStudio\GoogleFeed\Model\Api\Data\ProductAttributeValue"/>
     <preference for="UpturnStudio\GoogleFeed\Api\Data\ProductAttributeValueSearchResultsInterface"
@@ -206,4 +206,29 @@
             <argument name="resourceModel" xsi:type="string">UpturnStudio\GoogleFeed\Model\ResourceModel\Feed</argument>
         </arguments>
     </virtualType>
+
+    <!-- AI connector (UpturnStudio_Mcp): one tool per action. Tools that change data stay off until an admin allows them. -->
+    <type name="UpturnStudio\Mcp\Model\Mcp\ToolRegistry">
+        <arguments>
+            <argument name="tools" xsi:type="array">
+                <item name="googleFeedGetOptions" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\GetOptionsTool</item>
+                <item name="googleFeedListFeeds" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\ListFeedsTool</item>
+                <item name="googleFeedGetFeed" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\GetFeedTool</item>
+                <item name="googleFeedCreateFeed" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\CreateFeedTool</item>
+                <item name="googleFeedUpdateFeed" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\UpdateFeedTool</item>
+                <item name="googleFeedDeleteFeed" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\DeleteFeedTool</item>
+                <item name="googleFeedDuplicateFeed" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\DuplicateFeedTool</item>
+                <item name="googleFeedGenerateFeed" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\GenerateFeedTool</item>
+                <item name="googleFeedSetMappingRows" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\SetMappingRowsTool</item>
+                <item name="googleFeedRemoveMappingRows" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\RemoveMappingRowsTool</item>
+                <item name="googleFeedPreviewItem" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\PreviewItemTool</item>
+                <item name="googleFeedListAttributeValues" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\ListAttributeValuesTool</item>
+                <item name="googleFeedSetAttributeValues" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\SetAttributeValuesTool</item>
+                <item name="googleFeedDeleteAttributeValues" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\DeleteAttributeValuesTool</item>
+                <item name="googleFeedListAttributedOrders" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\ListAttributedOrdersTool</item>
+                <item name="googleFeedGetSettings" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\GetSettingsTool</item>
+                <item name="googleFeedUpdateSettings" xsi:type="object">UpturnStudio\GoogleFeed\Model\Mcp\Tool\UpdateSettingsTool</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

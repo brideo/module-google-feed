@@ -75,6 +75,23 @@ class RecordOrderClickObserverTest extends TestCase
         $this->observer->execute($this->buildObserver(['order' => $this->buildOrder(42)]));
     }
 
+    public function testAClickAttachedToTheCartBeatsTheCookie(): void
+    {
+        $this->appState->method('getAreaCode')->willReturn(Area::AREA_WEBAPI_REST);
+        $this->cookieManager->method('getCookie')->willReturn(json_encode(['gclid' => 'from-cookie']));
+        $this->config->method('isTrackingEnabled')->willReturn(true);
+        $this->orderClick->method('getQuoteClick')->with(55)->willReturn(['gclid' => 'from-cart', 'landing_sku' => 'SKU-9']);
+
+        $this->orderClick->expects($this->once())->method('save')->with(
+            42,
+            $this->callback(static fn (array $click): bool => $click['gclid'] === 'from-cart')
+        );
+
+        $order = $this->buildOrder(42);
+        $order->method('getQuoteId')->willReturn(55);
+        $this->observer->execute($this->buildObserver(['order' => $order]));
+    }
+
     public function testRecordsEveryOrderOfAMultishippingCheckout(): void
     {
         $this->appState->method('getAreaCode')->willReturn(Area::AREA_FRONTEND);

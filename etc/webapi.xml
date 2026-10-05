@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/upturnstudio/google-feed/feeds" method="GET">
-        <service class="UpturnStudio\GoogleFeed\Api\FeedListInterface" method="getList"/>
-        <resources>
-            <resource ref="UpturnStudio_GoogleFeed::api_feeds"/>
-        </resources>
-    </route>
     <route url="/V1/upturnstudio/google-feed/product-attributes" method="GET">
         <service class="UpturnStudio\GoogleFeed\Api\ProductAttributeManagementInterface" method="getList"/>
         <resources>
@@ -30,5 +24,20 @@
         <resources>
             <resource ref="UpturnStudio_GoogleFeed::api_orders"/>
         </resources>
+    </route>
+    <route url="/V1/upturnstudio/google-feed/guest-carts/:cartId/click" method="POST">
+        <service class="UpturnStudio\GoogleFeed\Api\CartClickInterface" method="saveForGuestCart"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/upturnstudio/google-feed/carts/mine/click" method="POST">
+        <service class="UpturnStudio\GoogleFeed\Api\CartClickInterface" method="saveForCustomerCart"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
     </route>
 </routes>

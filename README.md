@@ -11,7 +11,8 @@ to compare Google Ads spend with real sales per product.
 |---|---|
 | **Product feeds** | Build XML feeds for Merchant Center. Choose which products go in and map each Google attribute to a product attribute, fixed text, a template or a built-in value such as price or availability. |
 | **Ad click capture** | When a shopper arrives from a Google ad, the click ID is remembered and recorded on the order they place. |
-| **Reporting API** | An external system can read click-attributed orders and push Google-specific values (category, GTIN, custom labels, better titles) for any SKU. |
+| **AI connector tools** | An AI client, or the reporting service, can read and manage feeds, mapping, Google-specific values (category, GTIN, custom labels, better titles) and orders through the store's MCP connector, one tool per action. Edit tools are off until an admin allows them. |
+| **REST API** | Google attribute values and click-attributed orders for systems that prefer REST, and a cart click call for headless storefronts. |
 
 The module does not connect to Google Ads itself. A separate reporting system
 fetches spend and clicks per product from Google Ads and joins them to this
@@ -56,10 +57,11 @@ bin/magento cache:flush
 | [Generating feeds](user-guides/generating-feeds.md) | Schedules, Generate Now, the command line, run status |
 | [Google attribute values per product](user-guides/google-attribute-values.md) | Values pushed through the API and where to see them |
 | [Ad click tracking](user-guides/ad-click-tracking.md) | How clicks are captured and tied to orders |
-| [Subscription and API access](user-guides/subscription-and-api-access.md) | The optional subscription key and connecting the reporting system |
+| [AI connector](user-guides/ai-connector.md) | Letting an AI client or the reporting service manage feeds, and the edit switch |
+| [Subscription and API access](user-guides/subscription-and-api-access.md) | The optional subscription key and REST access |
 | [Troubleshooting](user-guides/troubleshooting.md) | Common problems and how to fix them |
 
-For developers of the reporting system: [REST API reference](docs/api.md).
+For developers of the reporting system: the [AI connector tools reference](docs/mcp-tools.md) and the [REST API reference](docs/api.md).
 
 ## Good to know
 
@@ -78,14 +80,16 @@ For developers of the reporting system: [REST API reference](docs/api.md).
 
 ## Permissions
 
-Under **System > Permissions > User Roles** (and on Integrations):
+Under **System > Permissions > User Roles** (and on Integrations, for the REST routes):
 
 | Resource | Grants |
 |---|---|
-| Google Feeds > Manage Feeds | The feed grid and form |
-| Google Feeds > API > Read Feed List | Feed list endpoint |
-| Google Feeds > API > Read and Write Google Attribute Values | Attribute value endpoints |
-| Google Feeds > API > Read Click-Attributed Orders | Orders endpoint |
+| Google Feeds > Manage Feeds | The feed grid and form in the admin |
+| Google Feeds > API and AI Connector > Read Feeds, Options and Item Previews | AI connector read tools for feeds |
+| ... > Create, Change and Delete Feeds; Run Generation | AI connector tools that edit feeds |
+| ... > Read and Write Google Attribute Values | Attribute value tools and REST routes |
+| ... > Read Click-Attributed Orders | Orders tool and REST route |
+| ... > Read and Change Settings | Settings tools |
 | Stores > Configuration > Google Feeds Section | The settings page |
 
 ## Extending
@@ -95,6 +99,9 @@ Under **System > Permissions > User Roles** (and on Integrations):
 - **More built-in value sources**: implement
   `UpturnStudio\GoogleFeed\Model\Feed\Resolver\ResolverInterface` and add it to
   the `resolvers` argument of `...\Resolver\ResolverPool`.
+- **More AI connector tools**: implement `UpturnStudio\Mcp\Api\ToolInterface` (extend
+  `UpturnStudio\GoogleFeed\Model\Mcp\AbstractTool` to get the permission check and the
+  edit switch) and register it on `UpturnStudio\Mcp\Model\Mcp\ToolRegistry`.
 - **A different subscription check**: replace the preference for
   `UpturnStudio\GoogleFeed\Api\LicenceValidatorInterface`.
 

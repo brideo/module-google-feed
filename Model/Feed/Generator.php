@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace UpturnStudio\GoogleFeed\Model\Feed;
 
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Visibility;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
@@ -36,7 +35,7 @@ class Generator
     /**
      * Types whose stock is derived from their children rather than their own source items.
      */
-    private const COMPOSITE_TYPES = ['bundle', 'grouped'];
+    public const COMPOSITE_TYPES = ['bundle', 'grouped'];
 
     private const PARENT_CACHE_LIMIT = 1000;
 
@@ -57,6 +56,8 @@ class Generator
      * @param ValueResolver $valueResolver
      * @param ItemBuilder $itemBuilder
      * @param ItemWriter $itemWriter
+     * @param FeedFiltersBuilder $filtersBuilder
+     * @param ListingRules $listingRules
      */
     public function __construct(
         private readonly StoreManagerInterface $storeManager,
@@ -69,7 +70,9 @@ class Generator
         private readonly SalabilityProvider $salabilityProvider,
         private readonly ValueResolver $valueResolver,
         private readonly ItemBuilder $itemBuilder,
-        private readonly ItemWriter $itemWriter
+        private readonly ItemWriter $itemWriter,
+        private readonly FeedFiltersBuilder $filtersBuilder,
+        private readonly ListingRules $listingRules
     ) {
     }
 
@@ -104,12 +107,7 @@ class Generator
     {
         $storeId = (int) $store->getId();
         $mapping = $feed->getMapping();
-        $filters = $feed->getFilters();
-        $typeIds = array_values(array_filter((array) ($filters['product_types'] ?? []))) ?: self::DEFAULT_TYPES;
-        $attributeSetIds = array_map('intval', array_filter((array) ($filters['attribute_set_ids'] ?? [])));
-        $categoryIds = $this->catalogData->expandCategoryIds((array) ($filters['category_ids'] ?? []));
-        $visibilities = array_map('intval', array_filter((array) ($filters['visibility'] ?? [])));
-        $inStockOnly = !empty($filters['exclude_out_of_stock']);
+        $filters = $this->filtersBuilder->build($feed);
         $attributeCodes = $this->valueResolver->getAttributeCodes($mapping);
         $withGallery = $this->valueResolver->usesResolver($mapping, 'additional_images');
         $batchSize = $this->config->getBatchSize();
@@ -138,8 +136,8 @@ class Generator
                     $storeId,
                     $lastId,
                     $batchSize,
-                    $typeIds,
-                    $attributeSetIds,
+                    $filters->typeIds,
+                    $filters->attributeSetIds,
                     $attributeCodes,
                     $withGallery
                 );
@@ -169,7 +167,7 @@ class Generator
                         : ($salable[$skuKey] ?? false);
 
                     $context = new ProductContext($product, $parent, $store, $feed, $isSalable, $itemCategories);
-                    if (!$this->isListed($context, $visibilities, $categoryIds, $inStockOnly)) {
+                    if ($this->listingRules->getExclusionReason($context, $filters) !== null) {
                         continue;
                     }
                     $item = $this->itemBuilder->build($context, $mapping, $overrides[$skuKey] ?? []);
@@ -198,39 +196,6 @@ class Generator
         $mediaDirectory->renameFile($temporaryPath, $finalPath);
 
         return $count;
-    }
-
-    /**
-     * Whether the product passes the feed's filters.
-     *
-     * A variant without its own page is judged by its parent's visibility and is dropped when it has no parent.
-     *
-     * @param ProductContext $context
-     * @param int[] $visibilities Empty for any storefront visibility
-     * @param int[] $categoryIds Empty for any category
-     * @param bool $inStockOnly
-     * @return bool
-     */
-    private function isListed(ProductContext $context, array $visibilities, array $categoryIds, bool $inStockOnly): bool
-    {
-        if ($inStockOnly && !$context->salable) {
-            return false;
-        }
-        if (!$context->isVisibleIndividually() && $context->parent === null) {
-            return false;
-        }
-        $visibility = (int) $context->getPageProduct()->getVisibility();
-        if ($visibility === Visibility::VISIBILITY_NOT_VISIBLE) {
-            return false;
-        }
-        if ($visibilities && !in_array($visibility, $visibilities, true)) {
-            return false;
-        }
-        if ($categoryIds && !array_intersect($context->categoryIds, $categoryIds)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

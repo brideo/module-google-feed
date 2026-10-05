@@ -133,7 +133,7 @@ To fill `google_product_category`, you can:
 3. **Use a product attribute.** Create a product attribute holding the Google
    category, fill it per product (or on the configurable parent, with **Prefer
    Parent** ticked), and map the row to it.
-4. **Push it per SKU through the API.** The reporting system can set it for
+4. **Push it per SKU through the AI connector or the API.** The reporting system can set it for
    each product. See [Google attribute values per product](google-attribute-values.md).
 
 ## Limits applied for you
@@ -144,5 +144,5 @@ To fill `google_product_category`, you can:
 
 ## Values that override the mapping
 
-A value pushed through the API for a SKU always wins over the mapping for that
+A value pushed through the AI connector or the API for a SKU always wins over the mapping for that
 product. See [Google attribute values per product](google-attribute-values.md).

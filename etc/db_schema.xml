@@ -79,4 +79,26 @@
             <column name="landing_sku"/>
         </index>
     </table>
+
+    <table name="upturnstudio_googlefeed_quote_click" resource="checkout" engine="innodb"
+           comment="Google Ads click identifiers attached to carts by headless storefronts">
+        <column xsi:type="int" name="click_id" unsigned="true" nullable="false" identity="true" comment="Click ID"/>
+        <column xsi:type="int" name="quote_id" unsigned="true" nullable="false" comment="Quote ID"/>
+        <column xsi:type="varchar" name="gclid" nullable="true" length="255" comment="Google click ID"/>
+        <column xsi:type="varchar" name="gbraid" nullable="true" length="255" comment="iOS app-to-web click ID"/>
+        <column xsi:type="varchar" name="wbraid" nullable="true" length="255" comment="iOS web-to-app click ID"/>
+        <column xsi:type="varchar" name="landing_sku" nullable="true" length="64" comment="SKU of the product page the click landed on"/>
+        <column xsi:type="text" name="landing_url" nullable="true" comment="Landing URL"/>
+        <column xsi:type="timestamp" name="clicked_at" on_update="false" nullable="true" comment="When the click landed"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="click_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UPTURNSTUDIO_GOOGLEFEED_QUOTE_CLICK_QUOTE_ID">
+            <column name="quote_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="UPTURNSTUDIO_GOOGLEFEED_QUOTE_CLICK_QUOTE_ID_QUOTE_ENTITY_ID"
+                    table="upturnstudio_googlefeed_quote_click" column="quote_id"
+                    referenceTable="quote" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
 </schema>

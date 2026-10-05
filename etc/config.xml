@@ -11,6 +11,9 @@
                 <cookie_lifetime>90</cookie_lifetime>
                 <respect_cookie_restriction>1</respect_cookie_restriction>
             </tracking>
+            <mcp>
+                <allow_write>0</allow_write>
+            </mcp>
             <subscription>
                 <key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <validation_url/>

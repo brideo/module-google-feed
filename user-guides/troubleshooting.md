@@ -105,6 +105,36 @@ Feeds > Feed Generation**. Mapping fewer attributes and leaving out
 It is only recorded when the ad lands on a product page. Clicks that land on a
 category page, the home page or a search page have a landing page but no SKU.
 
+## AI connector
+
+### A tool says "switched off"
+
+Tools that change data are off by default. Turn on **Allow Tools That Change
+Data** under **Stores > Configuration > UpturnStudio > Google Feeds > AI
+Connector (MCP)**, after reading the note about the connector's read-only
+sign-in screen in the [AI connector](ai-connector.md) guide. Read tools never
+need it.
+
+### A tool says the admin role does not include a permission
+
+The connector acts as the admin who signed in. Add the permission named in the
+message to that admin's role under **System > Permissions > User Roles > Role
+Resources > Google Feeds > API and AI Connector**.
+
+### The tools do not appear in the AI client
+
+Check the `UpturnStudio_Mcp` module is enabled (`bin/magento module:status
+UpturnStudio_Mcp`), that the admin's role has the **AI Connector (MCP)**
+permission, and that the connector's public base URL is set for remote use.
+Flush the cache after installing or upgrading.
+
+### A preview says the product would not be listed
+
+The preview's `reason` says why: the feed's filters, the product's status or
+visibility, or being out of stock with unavailable products left out. It is the
+same decision the generator makes, so the product is also missing from the real
+feed.
+
 ## Reporting API
 
 ### The API returns 401

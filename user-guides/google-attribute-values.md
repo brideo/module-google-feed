@@ -44,7 +44,7 @@ stored values.
 | **Source** | A label supplied by whoever wrote it. |
 | **Updated (UTC)** | When it was last written. |
 
-The section is read-only. Values are managed through the API.
+The section is read-only. Values are managed through the AI connector tools or the REST API.
 
 ## Typical uses
 
@@ -60,11 +60,11 @@ The section is read-only. Values are managed through the API.
 
 ## Changing or removing a value
 
-Ask whoever runs the reporting system, or use the API directly. Removing a
+Ask whoever runs the reporting system, or use the `google_feed_delete_attribute_values` tool or the REST API directly. Removing a
 stored value hands that attribute back to the feed mapping.
 
 Deleting a product does not delete its stored values. They are harmless, since
 a SKU that is not in the catalogue is never listed, and they apply again if the
 SKU returns.
 
-Developers: see the [REST API reference](../docs/api.md).
+Developers: see the [AI connector tools reference](../docs/mcp-tools.md) and the [REST API reference](../docs/api.md).

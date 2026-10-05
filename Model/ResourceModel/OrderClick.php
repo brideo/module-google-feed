@@ -14,8 +14,11 @@ use Magento\Framework\App\ResourceConnection;
 class OrderClick
 {
     public const TABLE = 'upturnstudio_googlefeed_order_click';
+    public const QUOTE_TABLE = 'upturnstudio_googlefeed_quote_click';
 
     private const CONNECTION = 'sales';
+    private const QUOTE_CONNECTION = 'checkout';
+    private const COLUMNS = ['gclid', 'gbraid', 'wbraid', 'landing_sku', 'landing_url', 'clicked_at'];
 
     /**
      * @param ResourceConnection $resource
@@ -45,5 +48,44 @@ class OrderClick
             $row,
             $columns
         );
+    }
+
+    /**
+     * Attach a click to a cart, for storefronts that cannot send the click cookie to Magento.
+     *
+     * @param int $quoteId
+     * @param array $click With keys gclid, gbraid, wbraid, landing_sku, landing_url and clicked_at
+     * @return void
+     */
+    public function saveQuoteClick(int $quoteId, array $click): void
+    {
+        $row = ['quote_id' => $quoteId];
+        foreach (self::COLUMNS as $column) {
+            $row[$column] = $click[$column] ?? null;
+        }
+
+        $this->resource->getConnection(self::QUOTE_CONNECTION)->insertOnDuplicate(
+            $this->resource->getTableName(self::QUOTE_TABLE, self::QUOTE_CONNECTION),
+            $row,
+            self::COLUMNS
+        );
+    }
+
+    /**
+     * The click attached to a cart, null when there is none.
+     *
+     * @param int $quoteId
+     * @return array|null
+     */
+    public function getQuoteClick(int $quoteId): ?array
+    {
+        $connection = $this->resource->getConnection(self::QUOTE_CONNECTION);
+        $row = $connection->fetchRow(
+            $connection->select()
+                ->from($this->resource->getTableName(self::QUOTE_TABLE, self::QUOTE_CONNECTION), self::COLUMNS)
+                ->where('quote_id = ?', $quoteId)
+        );
+
+        return $row ?: null;
     }
 }

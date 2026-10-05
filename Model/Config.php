@@ -14,14 +14,15 @@ use Magento\Store\Model\ScopeInterface;
  */
 class Config
 {
-    private const XML_PATH_BATCH_SIZE = 'upturnstudio_googlefeed/generation/batch_size';
-    private const XML_PATH_TRACKING_ENABLED = 'upturnstudio_googlefeed/tracking/enabled';
-    private const XML_PATH_COOKIE_LIFETIME = 'upturnstudio_googlefeed/tracking/cookie_lifetime';
-    private const XML_PATH_RESPECT_RESTRICTION = 'upturnstudio_googlefeed/tracking/respect_cookie_restriction';
-    private const XML_PATH_SUBSCRIPTION_KEY = 'upturnstudio_googlefeed/subscription/key';
-    private const XML_PATH_VALIDATION_URL = 'upturnstudio_googlefeed/subscription/validation_url';
-    private const XML_PATH_COOKIE_RESTRICTION = 'web/cookie/cookie_restriction';
-    private const XML_PATH_WEIGHT_UNIT = 'general/locale/weight_unit';
+    public const XML_PATH_BATCH_SIZE = 'upturnstudio_googlefeed/generation/batch_size';
+    public const XML_PATH_TRACKING_ENABLED = 'upturnstudio_googlefeed/tracking/enabled';
+    public const XML_PATH_COOKIE_LIFETIME = 'upturnstudio_googlefeed/tracking/cookie_lifetime';
+    public const XML_PATH_RESPECT_RESTRICTION = 'upturnstudio_googlefeed/tracking/respect_cookie_restriction';
+    public const XML_PATH_SUBSCRIPTION_KEY = 'upturnstudio_googlefeed/subscription/key';
+    public const XML_PATH_VALIDATION_URL = 'upturnstudio_googlefeed/subscription/validation_url';
+    public const XML_PATH_MCP_ALLOW_WRITE = 'upturnstudio_googlefeed/mcp/allow_write';
+    public const XML_PATH_COOKIE_RESTRICTION = 'web/cookie/cookie_restriction';
+    public const XML_PATH_WEIGHT_UNIT = 'general/locale/weight_unit';
 
     private const DEFAULT_BATCH_SIZE = 500;
     private const DEFAULT_COOKIE_LIFETIME = 90;
@@ -87,6 +88,31 @@ class Config
             ScopeInterface::SCOPE_STORE,
             $storeId
         ) && $this->scopeConfig->isSetFlag(self::XML_PATH_COOKIE_RESTRICTION, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    /**
+     * Whether the "respect cookie restriction" setting is on, whatever the store's own restriction setting is.
+     *
+     * @param int|string|null $storeId
+     * @return bool
+     */
+    public function isRespectCookieRestriction(int|string|null $storeId = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_RESPECT_RESTRICTION,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * Whether AI connector (MCP) tools may change data. Off unless an admin turns it on.
+     *
+     * @return bool
+     */
+    public function isMcpWriteAllowed(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XML_PATH_MCP_ALLOW_WRITE);
     }
 
     /**

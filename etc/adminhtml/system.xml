@@ -52,6 +52,16 @@
                     <comment>When Cookie Restriction Mode is on, only capture after the shopper has accepted cookies.</comment>
                 </field>
             </group>
+            <group id="mcp" translate="label" type="text" sortOrder="40"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>AI Connector (MCP)</label>
+                <field id="allow_write" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Allow Tools That Change Data</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Off by default. When on, an AI client connected through the AI Connector can create, change and delete feeds, mapping, Google attribute values and these settings, within the connecting admin's permissions. <strong>The connector's sign-in screen tells admins it grants read-only access</strong>, so only turn this on if everyone who can connect understands that is no longer true.]]></comment>
+                </field>
+            </group>
         </section>
     </system>
 </config>

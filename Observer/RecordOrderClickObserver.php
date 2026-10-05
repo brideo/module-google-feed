@@ -17,7 +17,7 @@ use UpturnStudio\GoogleFeed\Model\Config;
 use UpturnStudio\GoogleFeed\Model\ResourceModel\OrderClick;
 
 /**
- * Copies the shopper's captured ad click onto the order(s) they just placed.
+ * Copies the shopper's captured ad click onto the order(s) they just placed, from the cart or from the cookie.
  *
  * Runs on checkout_submit_all_after because the order already has its ID there, for the storefront, REST and
  * GraphQL checkouts alike.
@@ -52,14 +52,17 @@ class RecordOrderClickObserver implements ObserverInterface
             if ($this->appState->getAreaCode() === Area::AREA_ADMINHTML) {
                 return;
             }
-            $click = $this->cookieParser->parse($this->cookieManager->getCookie(CookieParser::COOKIE_NAME));
-            if ($click === null) {
-                return;
-            }
+            $cookieClick = $this->cookieParser->parse($this->cookieManager->getCookie(CookieParser::COOKIE_NAME));
 
             $orders = $observer->getEvent()->getData('orders') ?: [$observer->getEvent()->getData('order')];
             foreach (array_filter($orders) as $order) {
-                if ($order->getId() && $this->config->isTrackingEnabled($order->getStoreId())) {
+                if (!$order->getId() || !$this->config->isTrackingEnabled($order->getStoreId())) {
+                    continue;
+                }
+                // A click attached to the cart through the API wins: headless storefronts have no cookie to send.
+                $quoteId = (int) $order->getQuoteId();
+                $click = ($quoteId ? $this->orderClick->getQuoteClick($quoteId) : null) ?? $cookieClick;
+                if ($click !== null) {
                     $this->orderClick->save((int) $order->getId(), $click);
                 }
             }

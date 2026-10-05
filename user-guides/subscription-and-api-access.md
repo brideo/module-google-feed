@@ -10,8 +10,10 @@ data and gives you:
   content,
 - Google Ads spend against real sales and return per product.
 
-To use it you need two things: a subscription key, and an access token so the
-service can read from your store.
+To use it you need a subscription key, and a way for the service to reach your
+store. The service connects through the [AI connector](ai-connector.md), which
+is how it reads and manages your feeds. It can also use the REST routes
+described below for attribute values and orders.
 
 ## Subscription key
 
@@ -29,7 +31,7 @@ that.
 |---|---|---|
 | Product feeds | Yes | Yes |
 | Ad click capture | Yes | Yes |
-| API for feeds, orders and attribute values | Yes | Yes |
+| AI connector tools and REST routes | Yes | Yes |
 | Content improvement suggestions | No | Yes, in the reporting service |
 | Ad spend vs ROI reporting | No | Yes, in the reporting service |
 
@@ -42,15 +44,27 @@ subscription service cannot be reached, nothing changes.
 
 ## Giving the reporting system access
 
-Create an integration that can use only this module's API.
+There are two ways in, and either or both can be used.
+
+### The AI connector (feeds, mapping, previews, settings)
+
+Follow the [AI connector](ai-connector.md) guide. Everything that manages feeds
+goes this way. The service signs in as an admin and acts within that admin's
+role, so create a dedicated role for it. Tools that change data stay off until
+you switch them on.
+
+### REST (Google attribute values and orders)
+
+For systems that prefer REST, create an integration that can use only the
+routes you want.
 
 1. Go to **System > Extensions > Integrations** and click **Add New
    Integration**.
 2. Give it a name, such as *Google Feeds reporting*, and enter your admin
    password where asked.
 3. Open the **API** tab and set **Resource Access** to **Custom**.
-4. Tick only the resources under **Google Feeds > API**:
-   - **Read Feed List**
+4. Tick only the resources under **Google Feeds > API and AI Connector** that
+   it needs:
    - **Read and Write Google Attribute Values**
    - **Read Click-Attributed Orders**
 5. Save, then click **Activate** in the grid and **Allow**.
@@ -68,7 +82,7 @@ delete the integration.
 
 | It can | It cannot |
 |---|---|
-| List your feeds and their URLs | Create, change or delete feeds |
+| List your feeds and their URLs | Create, change or delete feeds, unless you switch on edit tools for the AI connector |
 | Read orders that came from an ad click, with their items | Read orders that did not come from an ad click |
 | Set and remove Google attribute values per SKU | Change products, prices, stock or customers |
 
@@ -82,4 +96,4 @@ Permissions > User Roles** and tick **Google Feeds > Manage Feeds**. To let
 them change the settings, also tick **Stores > Settings > Configuration >
 Google Feeds Section**.
 
-Developers: see the [REST API reference](../docs/api.md).
+Developers: see the [AI connector tools reference](../docs/mcp-tools.md) and the [REST API reference](../docs/api.md).

@@ -1,0 +1,16 @@
+# UpturnStudio_GoogleFeed
+# Headless storefronts only; feeds are managed through the AI connector tools.
+
+type Mutation {
+    setGoogleAdsClickOnCart(input: GoogleAdsClickInput!): Boolean @resolver(class: "UpturnStudio\\GoogleFeed\\Model\\Resolver\\SetClickOnCart") @doc(description: "For headless storefronts: attach a Google Ads click to a cart so the order it becomes is attributed to it. Needs no token, only the cart ID.")
+}
+
+input GoogleAdsClickInput {
+    cart_id: String! @doc(description: "Masked cart ID.")
+    gclid: String
+    gbraid: String
+    wbraid: String
+    landing_sku: String
+    landing_url: String
+    clicked_at: String @doc(description: "ISO 8601.")
+}
