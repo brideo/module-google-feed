@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/upturnstudio/google-feed/feeds" method="GET">
+        <service class="UpturnStudio\GoogleFeed\Api\FeedListInterface" method="getList"/>
+        <resources>
+            <resource ref="UpturnStudio_GoogleFeed::api_feeds"/>
+        </resources>
+    </route>
+    <route url="/V1/upturnstudio/google-feed/product-attributes" method="GET">
+        <service class="UpturnStudio\GoogleFeed\Api\ProductAttributeManagementInterface" method="getList"/>
+        <resources>
+            <resource ref="UpturnStudio_GoogleFeed::api_attributes"/>
+        </resources>
+    </route>
+    <route url="/V1/upturnstudio/google-feed/product-attributes" method="PUT">
+        <service class="UpturnStudio\GoogleFeed\Api\ProductAttributeManagementInterface" method="save"/>
+        <resources>
+            <resource ref="UpturnStudio_GoogleFeed::api_attributes"/>
+        </resources>
+    </route>
+    <route url="/V1/upturnstudio/google-feed/product-attributes/delete" method="POST">
+        <service class="UpturnStudio\GoogleFeed\Api\ProductAttributeManagementInterface" method="delete"/>
+        <resources>
+            <resource ref="UpturnStudio_GoogleFeed::api_attributes"/>
+        </resources>
+    </route>
+    <route url="/V1/upturnstudio/google-feed/attributed-orders" method="GET">
+        <service class="UpturnStudio\GoogleFeed\Api\AttributedOrderListInterface" method="getList"/>
+        <resources>
+            <resource ref="UpturnStudio_GoogleFeed::api_orders"/>
+        </resources>
+    </route>
+</routes>

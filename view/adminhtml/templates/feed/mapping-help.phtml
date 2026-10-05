@@ -1,0 +1,19 @@
+<?php
+/**
+ * UpturnStudio_GoogleFeed
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+?>
+<div class="message message-notice">
+    <p><?= $escaper->escapeHtml(__('Each row writes one Google attribute. Attributes without a value for a product are left out of its item.')) ?></p>
+    <ul style="margin-left: 2rem">
+        <li><?= $escaper->escapeHtml(__('Template: write text with product attribute codes in double braces, for example {{name}} - {{color}}.')) ?></li>
+        <li><?= $escaper->escapeHtml(__('Prefer Parent: variants take the value from their configurable product first. When either side is empty, the other one is used.')) ?></li>
+        <li><?= $escaper->escapeHtml(__('Values pushed through the API for a SKU always win over this mapping.')) ?></li>
+        <li><?= $escaper->escapeHtml(__('identifier_exists is set to "no" automatically when an item has no GTIN and no brand + MPN.')) ?></li>
+    </ul>
+</div>

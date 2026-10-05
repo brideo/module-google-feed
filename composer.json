@@ -1,0 +1,38 @@
+{
+    "name": "upturnstudio/module-google-feed",
+    "description": "Google Merchant Center product feeds with configurable attribute mapping, ad-click capture on orders, and a REST API for spend-vs-sales attribution.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Brideo",
+            "homepage": "https://brideo.co.uk"
+        }
+    ],
+    "require": {
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "ext-xmlwriter": "*",
+        "magento/framework": "*",
+        "magento/framework-message-queue": "*",
+        "magento/module-backend": "*",
+        "magento/module-catalog": "*",
+        "magento/module-config": "*",
+        "magento/module-configurable-product": "*",
+        "magento/module-cron": "*",
+        "magento/module-eav": "*",
+        "magento/module-inventory-sales-api": "*",
+        "magento/module-quote": "*",
+        "magento/module-sales": "*",
+        "magento/module-store": "*",
+        "magento/module-tax": "*",
+        "magento/module-ui": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "UpturnStudio\\GoogleFeed\\": ""
+        }
+    }
+}

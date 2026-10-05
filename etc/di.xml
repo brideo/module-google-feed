@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="UpturnStudio\GoogleFeed\Api\FeedListInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\FeedList"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\ProductAttributeManagementInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\ProductAttributeManagement"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\AttributedOrderListInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\AttributedOrderList"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\LicenceValidatorInterface"
+                type="UpturnStudio\GoogleFeed\Model\Licence\HttpValidator"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\FeedInfoInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\FeedInfo"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\ProductAttributeValueInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\ProductAttributeValue"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\ProductAttributeValueSearchResultsInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\ProductAttributeValueSearchResults"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\BulkResultInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\BulkResult"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\AttributedOrderInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\AttributedOrder"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\AttributedOrderItemInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\AttributedOrderItem"/>
+    <preference for="UpturnStudio\GoogleFeed\Api\Data\AttributedOrderSearchResultsInterface"
+                type="UpturnStudio\GoogleFeed\Model\Api\Data\AttributedOrderSearchResults"/>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="upturnStudioGoogleFeedGenerate" xsi:type="object">
+                    UpturnStudio\GoogleFeed\Console\Command\GenerateCommand
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Google attributes offered in the mapping editor. Add items here from another module to extend the list. -->
+    <type name="UpturnStudio\GoogleFeed\Model\Feed\GoogleAttributePool">
+        <arguments>
+            <argument name="attributes" xsi:type="array">
+                <item name="id" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">ID</item>
+                    <item name="default_source" xsi:type="string">attribute:sku</item>
+                </item>
+                <item name="title" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Title</item>
+                    <item name="default_source" xsi:type="string">attribute:name</item>
+                </item>
+                <item name="description" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Description</item>
+                    <item name="default_source" xsi:type="string">attribute:description</item>
+                </item>
+                <item name="link" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Link</item>
+                    <item name="default_source" xsi:type="string">resolver:url</item>
+                </item>
+                <item name="image_link" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Image Link</item>
+                    <item name="default_source" xsi:type="string">resolver:image</item>
+                </item>
+                <item name="additional_image_link" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Additional Image Link</item>
+                    <item name="default_source" xsi:type="string">resolver:additional_images</item>
+                </item>
+                <item name="availability" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Availability</item>
+                    <item name="default_source" xsi:type="string">resolver:availability</item>
+                </item>
+                <item name="price" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Price</item>
+                    <item name="default_source" xsi:type="string">resolver:price</item>
+                </item>
+                <item name="sale_price" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Sale Price</item>
+                    <item name="default_source" xsi:type="string">resolver:sale_price</item>
+                </item>
+                <item name="brand" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Brand</item>
+                    <item name="default_source" xsi:type="string">attribute:manufacturer</item>
+                    <item name="default_use_parent" xsi:type="boolean">true</item>
+                </item>
+                <item name="gtin" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">GTIN</item>
+                </item>
+                <item name="mpn" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">MPN</item>
+                </item>
+                <item name="identifier_exists" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Identifier Exists</item>
+                </item>
+                <item name="condition" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Condition</item>
+                    <item name="default_source" xsi:type="string">static</item>
+                    <item name="default_value" xsi:type="string">new</item>
+                </item>
+                <item name="google_product_category" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Google Product Category</item>
+                </item>
+                <item name="product_type" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Product Type</item>
+                    <item name="default_source" xsi:type="string">resolver:category_path</item>
+                </item>
+                <item name="item_group_id" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Item Group ID</item>
+                    <item name="default_source" xsi:type="string">resolver:item_group_id</item>
+                </item>
+                <item name="color" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Color</item>
+                    <item name="default_source" xsi:type="string">attribute:color</item>
+                </item>
+                <item name="size" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Size</item>
+                    <item name="default_source" xsi:type="string">attribute:size</item>
+                </item>
+                <item name="gender" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Gender</item>
+                    <item name="default_source" xsi:type="string">attribute:gender</item>
+                    <item name="default_use_parent" xsi:type="boolean">true</item>
+                </item>
+                <item name="age_group" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Age Group</item>
+                </item>
+                <item name="material" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Material</item>
+                    <item name="default_source" xsi:type="string">attribute:material</item>
+                    <item name="default_use_parent" xsi:type="boolean">true</item>
+                </item>
+                <item name="pattern" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Pattern</item>
+                    <item name="default_source" xsi:type="string">attribute:pattern</item>
+                    <item name="default_use_parent" xsi:type="boolean">true</item>
+                </item>
+                <item name="shipping_weight" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Shipping Weight</item>
+                    <item name="default_source" xsi:type="string">resolver:weight</item>
+                </item>
+                <item name="shipping_label" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Shipping Label</item>
+                </item>
+                <item name="adult" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Adult</item>
+                </item>
+                <item name="multipack" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Multipack</item>
+                </item>
+                <item name="is_bundle" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Is Bundle</item>
+                </item>
+                <item name="availability_date" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Availability Date</item>
+                </item>
+                <item name="sale_price_effective_date" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Sale Price Effective Date</item>
+                </item>
+                <item name="mobile_link" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Mobile Link</item>
+                </item>
+                <item name="custom_label_0" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Custom Label 0</item>
+                </item>
+                <item name="custom_label_1" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Custom Label 1</item>
+                </item>
+                <item name="custom_label_2" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Custom Label 2</item>
+                </item>
+                <item name="custom_label_3" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Custom Label 3</item>
+                </item>
+                <item name="custom_label_4" xsi:type="array">
+                    <item name="label" xsi:type="string" translatable="true">Custom Label 4</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="UpturnStudio\GoogleFeed\Model\Feed\Resolver\ResolverPool">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="url" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\Url</item>
+                <item name="image" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\Image</item>
+                <item name="additional_images" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\AdditionalImages</item>
+                <item name="price" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\Price</item>
+                <item name="sale_price" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\SalePrice</item>
+                <item name="availability" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\Availability</item>
+                <item name="category_path" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\CategoryPath</item>
+                <item name="item_group_id" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\ItemGroupId</item>
+                <item name="weight" xsi:type="object">UpturnStudio\GoogleFeed\Model\Feed\Resolver\Weight</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="googlefeed_feed_listing_data_source" xsi:type="string">
+                    UpturnStudio\GoogleFeed\Model\ResourceModel\Feed\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="UpturnStudio\GoogleFeed\Model\ResourceModel\Feed\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">upturnstudio_googlefeed_feed</argument>
+            <argument name="resourceModel" xsi:type="string">UpturnStudio\GoogleFeed\Model\ResourceModel\Feed</argument>
+        </arguments>
+    </virtualType>
+</config>

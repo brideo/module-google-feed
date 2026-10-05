@@ -1,0 +1,24 @@
+<?php
+/**
+ * UpturnStudio_GoogleFeed
+ *
+ * Settings for the click-capture script. The script is a plain external file, so it needs no RequireJS (works on
+ * Luma and Hyvä alike) and no inline-script CSP allowance.
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use UpturnStudio\GoogleFeed\ViewModel\ClickCapture;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ClickCapture $viewModel */
+$viewModel = $block->getData('view_model');
+?>
+<div id="upturnstudio-googlefeed-click" hidden
+     data-cookie="<?= $escaper->escapeHtmlAttr($viewModel->getCookieName()) ?>"
+     data-lifetime="<?= (int) $viewModel->getCookieLifetimeDays() ?>"
+     data-consent-required="<?= $viewModel->isConsentRequired() ? '1' : '0' ?>"
+     data-sku="<?= $escaper->escapeHtmlAttr($viewModel->getLandingSku()) ?>"></div>
+<script src="<?= $escaper->escapeUrl($block->getViewFileUrl('UpturnStudio_GoogleFeed::js/click-capture.js')) ?>" defer></script>

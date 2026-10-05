@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">googlefeed_feed_listing.googlefeed_feed_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="add">
+                <url path="*/*/new"/>
+                <class>primary</class>
+                <label translate="true">Add Feed</label>
+            </button>
+        </buttons>
+        <spinner>googlefeed_feed_columns</spinner>
+        <deps>
+            <dep>googlefeed_feed_listing.googlefeed_feed_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="googlefeed_feed_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">feed_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>UpturnStudio_GoogleFeed::feeds</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                      name="googlefeed_feed_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>feed_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="googlefeed_feed_columns">
+        <column name="feed_id" sortOrder="10">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="name" sortOrder="20">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Name</label>
+            </settings>
+        </column>
+        <column name="store_id" component="Magento_Ui/js/grid/columns/select" sortOrder="30">
+            <settings>
+                <options class="UpturnStudio\GoogleFeed\Model\Source\StoreView"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Store View</label>
+            </settings>
+        </column>
+        <column name="is_active" component="Magento_Ui/js/grid/columns/select" sortOrder="40">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Scheduled</label>
+            </settings>
+        </column>
+        <column name="cron_expression" sortOrder="50">
+            <settings>
+                <label translate="true">Schedule</label>
+            </settings>
+        </column>
+        <column name="last_status" component="Magento_Ui/js/grid/columns/select" sortOrder="60">
+            <settings>
+                <options class="UpturnStudio\GoogleFeed\Model\Source\RunStatus"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Last Run</label>
+            </settings>
+        </column>
+        <column name="last_message" sortOrder="65">
+            <settings>
+                <label translate="true">Last Error</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="product_count" sortOrder="70">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Items</label>
+            </settings>
+        </column>
+        <column name="last_generated_at" class="Magento\Ui\Component\Listing\Columns\Date"
+                component="Magento_Ui/js/grid/columns/date" sortOrder="80">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Last Generated</label>
+            </settings>
+        </column>
+        <column name="feed_url" class="UpturnStudio\GoogleFeed\Ui\Component\Listing\Column\FeedUrl" sortOrder="90">
+            <settings>
+                <label translate="true">Feed URL</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="UpturnStudio\GoogleFeed\Ui\Component\Listing\Column\FeedActions" sortOrder="100">
+            <settings>
+                <indexField>feed_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

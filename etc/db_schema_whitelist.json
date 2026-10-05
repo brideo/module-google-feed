@@ -1,0 +1,67 @@
+{
+    "upturnstudio_googlefeed_feed": {
+        "column": {
+            "feed_id": true,
+            "name": true,
+            "store_id": true,
+            "is_active": true,
+            "token": true,
+            "target_country": true,
+            "price_tax": true,
+            "filters": true,
+            "mapping": true,
+            "cron_expression": true,
+            "last_status": true,
+            "last_message": true,
+            "product_count": true,
+            "last_generated_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "UPTURNSTUDIO_GOOGLEFEED_FEED_TOKEN": true,
+            "UPTURNSTUDIO_GOOGLEFEED_FEED_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "upturnstudio_googlefeed_product_attribute": {
+        "column": {
+            "value_id": true,
+            "sku": true,
+            "store_id": true,
+            "attribute_code": true,
+            "value": true,
+            "source": true,
+            "updated_at": true
+        },
+        "index": {
+            "UPTURNSTUDIO_GOOGLEFEED_PRODUCT_ATTRIBUTE_UPDATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "UPTURNSTUDIO_GOOGLEFEED_PRD_ATTR_SKU_STORE_ID_ATTR_CODE": true,
+            "UPTURNSTUDIO_GOOGLEFEED_PRD_ATTR_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "upturnstudio_googlefeed_order_click": {
+        "column": {
+            "click_id": true,
+            "order_id": true,
+            "gclid": true,
+            "gbraid": true,
+            "wbraid": true,
+            "landing_sku": true,
+            "landing_url": true,
+            "clicked_at": true,
+            "created_at": true
+        },
+        "index": {
+            "UPTURNSTUDIO_GOOGLEFEED_ORDER_CLICK_LANDING_SKU": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "UPTURNSTUDIO_GOOGLEFEED_ORDER_CLICK_ORDER_ID": true,
+            "UPTURNSTUDIO_GOOGLEFEED_ORDER_CLICK_ORDER_ID_SALES_ORDER_ENTT_ID": true
+        }
+    }
+}

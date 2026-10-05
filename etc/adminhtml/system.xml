@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="upturnstudio" translate="label" sortOrder="400">
+            <label>UpturnStudio</label>
+        </tab>
+        <section id="upturnstudio_googlefeed" translate="label" type="text" sortOrder="20"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Google Feeds</label>
+            <tab>upturnstudio</tab>
+            <resource>UpturnStudio_GoogleFeed::config</resource>
+            <group id="subscription" translate="label" type="text" sortOrder="10"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Subscription</label>
+                <field id="key" translate="label comment" type="obscure" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Subscription Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment>Optional. Connects this store to the reporting service for content suggestions and ad spend vs ROI tracking. Everything in this module works without it.</comment>
+                </field>
+            </group>
+            <group id="generation" translate="label" type="text" sortOrder="20"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Feed Generation</label>
+                <field id="batch_size" translate="label comment" type="text" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Batch Size</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Number of products loaded per chunk while a feed is written.</comment>
+                </field>
+            </group>
+            <group id="tracking" translate="label" type="text" sortOrder="30"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Ad Click Capture</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Capture Google Click IDs</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Stores gclid, gbraid and wbraid from the landing URL in a first-party cookie and records them on the order.</comment>
+                </field>
+                <field id="cookie_lifetime" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cookie Lifetime (days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>How long after a click an order is still attributed to it (default 90).</comment>
+                </field>
+                <field id="respect_cookie_restriction" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Respect Cookie Restriction Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When Cookie Restriction Mode is on, only capture after the shopper has accepted cookies.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

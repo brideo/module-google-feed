@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">googlefeed_feed_form.googlefeed_feed_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Feed</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="UpturnStudio\GoogleFeed\Block\Adminhtml\Feed\Edit\SaveButton"/>
+            <button name="save_and_continue" class="UpturnStudio\GoogleFeed\Block\Adminhtml\Feed\Edit\SaveAndContinueButton"/>
+            <button name="generate" class="UpturnStudio\GoogleFeed\Block\Adminhtml\Feed\Edit\GenerateButton"/>
+            <button name="delete" class="UpturnStudio\GoogleFeed\Block\Adminhtml\Feed\Edit\DeleteButton"/>
+            <button name="back" class="UpturnStudio\GoogleFeed\Block\Adminhtml\Feed\Edit\BackButton"/>
+        </buttons>
+        <namespace>googlefeed_feed_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>googlefeed_feed_form.googlefeed_feed_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="googlefeed_feed_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="upturnstudio_googlefeed/feed/save"/>
+        </settings>
+        <dataProvider class="UpturnStudio\GoogleFeed\Model\Feed\FormDataProvider" name="googlefeed_feed_form_data_source">
+            <settings>
+                <requestFieldName>feed_id</requestFieldName>
+                <primaryFieldName>feed_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <fieldset name="general" sortOrder="10">
+        <settings>
+            <label translate="true">General</label>
+            <collapsible>false</collapsible>
+        </settings>
+        <field name="feed_id" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <visible>false</visible>
+            </settings>
+        </field>
+        <field name="name" formElement="input" sortOrder="10">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Feed Name</label>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="store_id" formElement="select" sortOrder="20">
+            <settings>
+                <dataType>number</dataType>
+                <label translate="true">Store View</label>
+                <notice translate="true">Decides the language, currency, prices and stock the feed lists.</notice>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="UpturnStudio\GoogleFeed\Model\Source\StoreView"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="target_country" formElement="select" sortOrder="30">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Target Country</label>
+                <notice translate="true">For your reference and the reporting API; pick the same country in Merchant Center.</notice>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Directory\Model\Config\Source\Country"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="price_tax" formElement="select" sortOrder="40">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Prices</label>
+                <notice translate="true">Google expects prices including tax in most countries, and excluding tax in the US and Canada.</notice>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="UpturnStudio\GoogleFeed\Model\Source\PriceTax"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="is_active" formElement="checkbox" sortOrder="50">
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Generate on Schedule</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="string">0</map>
+                            <map name="true" xsi:type="string">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="cron_expression" formElement="input" sortOrder="60">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Schedule</label>
+                <notice translate="true">Cron expression in the admin timezone, e.g. "0 2 * * *" for 02:00 every day. Leave empty to generate manually only.</notice>
+            </settings>
+        </field>
+        <field name="feed_url" formElement="input" sortOrder="70">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Feed URL</label>
+                <notice translate="true">Give this URL to Merchant Center as a scheduled fetch. It works once the feed has been generated.</notice>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <imports>
+                    <link name="visible">${ $.provider }:data.feed_id</link>
+                </imports>
+            </settings>
+        </field>
+    </fieldset>
+
+    <fieldset name="filters" sortOrder="20">
+        <settings>
+            <label translate="true">Products to Include</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+        </settings>
+        <field name="product_types" formElement="multiselect" sortOrder="10">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Product Types</label>
+                <notice translate="true">Configurable products are always listed as their variants, grouped by the parent SKU.</notice>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="UpturnStudio\GoogleFeed\Model\Source\ProductType"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="category_ids" component="Magento_Ui/js/form/element/ui-select" formElement="select" sortOrder="20">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">true</item>
+                    <item name="showCheckbox" xsi:type="boolean">true</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="levelsVisibility" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <elementTmpl>ui/grid/filters/elements/ui-select</elementTmpl>
+                <dataType>text</dataType>
+                <label translate="true">Categories</label>
+                <notice translate="true">Includes products in the chosen categories and everything beneath them. Leave empty for the whole catalogue.</notice>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Catalog\Ui\Component\Product\Form\Categories\Options"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="attribute_set_ids" formElement="multiselect" sortOrder="30">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Attribute Sets</label>
+                <notice translate="true">Leave empty for all.</notice>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magento\Catalog\Model\Product\AttributeSet\Options"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="visibility" formElement="multiselect" sortOrder="40">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Visibility</label>
+                <notice translate="true">Leave empty for anything shoppers can reach. Products that are not visible individually are only listed as variants of a visible parent.</notice>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="UpturnStudio\GoogleFeed\Model\Source\Visibility"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="exclude_out_of_stock" formElement="checkbox" sortOrder="50">
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Leave Out Unavailable Products</label>
+                <notice translate="true">When off, products that cannot be bought are listed as out of stock, which keeps their history in Merchant Center.</notice>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="string">0</map>
+                            <map name="true" xsi:type="string">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+    </fieldset>
+
+    <fieldset name="attribute_mapping" sortOrder="30">
+        <settings>
+            <label translate="true">Attribute Mapping</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+        </settings>
+        <container name="mapping_help" sortOrder="5">
+            <htmlContent name="mapping_help_content">
+                <block class="Magento\Framework\View\Element\Template" name="upturnstudio.googlefeed.mapping.help"
+                       template="UpturnStudio_GoogleFeed::feed/mapping-help.phtml"/>
+            </htmlContent>
+        </container>
+        <dynamicRows name="mapping" sortOrder="10">
+            <settings>
+                <addButtonLabel translate="true">Add Attribute</addButtonLabel>
+                <additionalClasses>
+                    <class name="admin__field-wide">true</class>
+                </additionalClasses>
+                <componentType>dynamicRows</componentType>
+                <dndConfig>
+                    <param name="enabled" xsi:type="boolean">false</param>
+                </dndConfig>
+            </settings>
+            <container name="record" component="Magento_Ui/js/dynamic-rows/record">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="isTemplate" xsi:type="boolean">true</item>
+                        <item name="is_collection" xsi:type="boolean">true</item>
+                        <item name="componentType" xsi:type="string">container</item>
+                    </item>
+                </argument>
+                <field name="google_attribute" formElement="select" sortOrder="10">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Google Attribute</label>
+                        <validation>
+                            <rule name="required-entry" xsi:type="boolean">true</rule>
+                        </validation>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options class="UpturnStudio\GoogleFeed\Model\Source\GoogleAttribute"/>
+                                <caption translate="true">-- Select --</caption>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="source" formElement="select" sortOrder="20">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Value Comes From</label>
+                        <validation>
+                            <rule name="required-entry" xsi:type="boolean">true</rule>
+                        </validation>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options class="UpturnStudio\GoogleFeed\Model\Source\MappingSource"/>
+                                <caption translate="true">-- Select --</caption>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="value" formElement="input" sortOrder="30">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">Static Value / Template</label>
+                    </settings>
+                </field>
+                <field name="fallback" formElement="input" sortOrder="40">
+                    <settings>
+                        <dataType>text</dataType>
+                        <label translate="true">If Empty, Use</label>
+                    </settings>
+                </field>
+                <field name="use_parent" formElement="checkbox" sortOrder="50">
+                    <settings>
+                        <dataType>boolean</dataType>
+                        <label translate="true">Prefer Parent</label>
+                    </settings>
+                    <formElements>
+                        <checkbox>
+                            <settings>
+                                <valueMap>
+                                    <map name="false" xsi:type="string">0</map>
+                                    <map name="true" xsi:type="string">1</map>
+                                </valueMap>
+                            </settings>
+                        </checkbox>
+                    </formElements>
+                </field>
+                <actionDelete template="Magento_Backend/dynamic-rows/cells/action-delete" sortOrder="60">
+                    <settings>
+                        <componentType>actionDelete</componentType>
+                        <dataType>text</dataType>
+                        <label translate="true">Remove</label>
+                    </settings>
+                </actionDelete>
+            </container>
+        </dynamicRows>
+    </fieldset>
+</form>

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="upturnstudio_googlefeed_feed" resource="default" engine="innodb" comment="Google Merchant Center Feeds">
+        <column xsi:type="int" name="feed_id" unsigned="true" nullable="false" identity="true" comment="Feed ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Feed Name"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store View ID"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="varchar" name="token" nullable="false" length="64" comment="Unguessable file name token"/>
+        <column xsi:type="varchar" name="target_country" nullable="true" length="2" comment="Target country (ISO 3166-1 alpha-2)"/>
+        <column xsi:type="varchar" name="price_tax" nullable="false" length="8" default="auto" comment="Price tax mode: auto, incl or excl"/>
+        <column xsi:type="text" name="filters" nullable="true" comment="JSON product filters"/>
+        <column xsi:type="mediumtext" name="mapping" nullable="true" comment="JSON attribute mapping rows"/>
+        <column xsi:type="varchar" name="cron_expression" nullable="true" length="64" comment="Generation schedule; empty means manual only"/>
+        <column xsi:type="varchar" name="last_status" nullable="true" length="16" comment="queued, running, success or error"/>
+        <column xsi:type="text" name="last_message" nullable="true" comment="Last run message"/>
+        <column xsi:type="int" name="product_count" unsigned="true" nullable="true" comment="Items written by the last successful run"/>
+        <column xsi:type="timestamp" name="last_generated_at" on_update="false" nullable="true" comment="Last successful generation"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="feed_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UPTURNSTUDIO_GOOGLEFEED_FEED_TOKEN">
+            <column name="token"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="UPTURNSTUDIO_GOOGLEFEED_FEED_STORE_ID_STORE_STORE_ID"
+                    table="upturnstudio_googlefeed_feed" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="upturnstudio_googlefeed_product_attribute" resource="default" engine="innodb"
+           comment="Google attribute values pushed per SKU">
+        <column xsi:type="int" name="value_id" unsigned="true" nullable="false" identity="true" comment="Value ID"/>
+        <column xsi:type="varchar" name="sku" nullable="false" length="64" comment="Product SKU"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store View ID, 0 for all"/>
+        <column xsi:type="varchar" name="attribute_code" nullable="false" length="64" comment="Google attribute code"/>
+        <column xsi:type="text" name="value" nullable="true" comment="Value; empty suppresses the attribute"/>
+        <column xsi:type="varchar" name="source" nullable="true" length="32" comment="Who wrote the value"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="value_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UPTURNSTUDIO_GOOGLEFEED_PRODUCT_ATTRIBUTE_SKU_STORE_ID_CODE">
+            <column name="sku"/>
+            <column name="store_id"/>
+            <column name="attribute_code"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="UPTURNSTUDIO_GOOGLEFEED_PRODUCT_ATTRIBUTE_STORE_ID_STORE_STORE_ID"
+                    table="upturnstudio_googlefeed_product_attribute" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="UPTURNSTUDIO_GOOGLEFEED_PRODUCT_ATTRIBUTE_UPDATED_AT" indexType="btree">
+            <column name="updated_at"/>
+        </index>
+    </table>
+
+    <table name="upturnstudio_googlefeed_order_click" resource="sales" engine="innodb"
+           comment="Google Ads click identifiers captured on orders">
+        <column xsi:type="int" name="click_id" unsigned="true" nullable="false" identity="true" comment="Click ID"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order ID"/>
+        <column xsi:type="varchar" name="gclid" nullable="true" length="255" comment="Google click ID"/>
+        <column xsi:type="varchar" name="gbraid" nullable="true" length="255" comment="iOS app-to-web click ID"/>
+        <column xsi:type="varchar" name="wbraid" nullable="true" length="255" comment="iOS web-to-app click ID"/>
+        <column xsi:type="varchar" name="landing_sku" nullable="true" length="64" comment="SKU of the product page the click landed on"/>
+        <column xsi:type="text" name="landing_url" nullable="true" comment="Landing URL"/>
+        <column xsi:type="timestamp" name="clicked_at" on_update="false" nullable="true" comment="When the click landed"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="click_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UPTURNSTUDIO_GOOGLEFEED_ORDER_CLICK_ORDER_ID">
+            <column name="order_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="UPTURNSTUDIO_GOOGLEFEED_ORDER_CLICK_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="upturnstudio_googlefeed_order_click" column="order_id"
+                    referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="UPTURNSTUDIO_GOOGLEFEED_ORDER_CLICK_LANDING_SKU" indexType="btree">
+            <column name="landing_sku"/>
+        </index>
+    </table>
+</schema>

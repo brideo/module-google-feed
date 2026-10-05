@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="admin_system_config_changed_section_upturnstudio_googlefeed">
+        <observer name="upturnstudio_googlefeed_revalidate_subscription"
+                  instance="UpturnStudio\GoogleFeed\Observer\RevalidateSubscriptionObserver"/>
+    </event>
+</config>

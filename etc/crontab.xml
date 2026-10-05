@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="upturnstudio_googlefeed_dispatch_scheduled"
+             instance="UpturnStudio\GoogleFeed\Cron\DispatchScheduledFeeds" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+        <job name="upturnstudio_googlefeed_validate_subscription"
+             instance="UpturnStudio\GoogleFeed\Cron\ValidateSubscription" method="execute">
+            <schedule>17 4 * * *</schedule>
+        </job>
+    </group>
+</config>
