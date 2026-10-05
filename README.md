@@ -110,3 +110,7 @@ Under **System > Permissions > User Roles** (and on Integrations, for the REST r
 ```bash
 vendor/bin/phpunit -c dev/tests/unit/phpunit.xml.dist app/code/UpturnStudio/GoogleFeed/Test/Unit
 ```
+
+## Licence
+
+MIT. See [LICENSE](LICENSE).
